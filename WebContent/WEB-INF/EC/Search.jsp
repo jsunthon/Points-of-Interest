@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 <head>
@@ -38,25 +39,60 @@
 			center : userLoc,
 		});
 
-		// This event listener will call addMarker() when the map is clicked.
-		map.addListener('click', function(event) {
-			addMarker(event.latLng);
+		// Adds a marker at the center of the map.
+		addMarker(userLoc, 0, "You are here!");
+	}
+
+	// Adds a marker to the map and push to the array.
+	function addMarker(location, placesLength, content) {
+
+		var contentString = content;
+
+		var infowindow = new google.maps.InfoWindow({
+			content : contentString
 		});
 
-		// Adds a marker at the center of the map.
-		addMarker(userLoc);
-	}
-	
-	// Adds a marker to the map and push to the array.
-	function addMarker(location) {
-/* 		var myLatLng = new google.maps.LatLng(location.lat, location.lng); */
-		var marker = new google.maps.Marker({
-			position : location,
-			map : map
+		if (placesLength === 0) {
+			/* var image = "http://goo.gl/7q702U"; */
+			var image = "../Content/person-icon.png";
+			var icon = {
+				url : image,
+				scaledSize : new google.maps.Size(30, 50), // scaled size
+				origin : new google.maps.Point(0, 0), // origin
+				anchor : new google.maps.Point(0, 0)
+			// anchor
+			};
+			var marker = new google.maps.Marker({
+				position : location,
+				map : map,
+				icon : icon,
+				animation : google.maps.Animation.BOUNCE
+			});
+		} else {
+			var marker = new google.maps.Marker({
+				position : location,
+				map : map,
+				animation : google.maps.Animation.DROP
+			});
+		}
+
+		marker.addListener('click', function() {
+			infowindow.open(map, marker);
 		});
-		/* bounds.extend(myLatLng); */
 		markers.push(marker);
-	/* 	map.fitBounds(bounds); */
+
+		if (markers.length >= placesLength) {
+			extendBounds();
+		}
+	}
+
+	function extendBounds() {
+		var bounds = new google.maps.LatLngBounds();
+		for (var i = 0; i < markers.length; i++) {
+			var myLatLng = markers[i].getPosition();
+			bounds.extend(myLatLng);
+		}
+		map.fitBounds(bounds);
 	}
 
 	// Sets the map on all markers in the array.
@@ -72,30 +108,37 @@
 	}
 
 	// Shows any markers currently in the array.
-	function showMarkers() {
-		setMapOnAll(map);
-	}
-
+	/* 	function showMarkers() {
+	 setMapOnAll(map);
+	 }
+	 */
 	// Deletes all markers in the array by removing references to them.
 	function deleteMarkers() {
 		clearMarkers();
 		markers = [];
 	}
-</script>
-<script async defer
-	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDv_0sVA5OuZzQuulNUuP6gkYKMWt88vwk&callback=initMap"></script>
-<script>
-	function populate(latitude, longitude) {
+
+	function populate(latitude, longitude, placesLength, infoArr) {
 		var lati = parseFloat(latitude);
 		var longi = parseFloat(longitude);
 		var location = {
 			lat : lati,
 			lng : longi
 		};
-		addMarker(location);
+
+		var info = infoArr;
+
+		var content = "<b>Name:</b> " + info[0] + "<br/>" + "<b>Address:</b> "
+				+ info[1] + "<br/>" + "<b>Phone:</b> " + info[2] + "<br/>"
+				+ "<b>Type:</b> " + info[3] + "<br/>" + "<b>Latitude:</b> "
+				+ info[4] + "<br/>" + "<b>Longitude:</b> " + info[5] + "<br/>";
+
+		addMarker(location, placesLength, content);
 		console.log("\nlatitude: " + lati + " longitude: " + longi);
 	}
 </script>
+<script async defer
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDv_0sVA5OuZzQuulNUuP6gkYKMWt88vwk&callback=initMap"></script>
 
 </head>
 <body class="container-fluid">
@@ -116,35 +159,42 @@
 	<br />
 	<div class="row">
 		<!-------------------------------- GOOGLE MAP ------------------------------>
-		<div id="map" class="col-md-6 col-md-offset-3"></div>
+		<div id="map" class="col-md-6 col-md-offset-2"></div>
 		<!-------------------------------- END GOOGLE MAP ------------------------------>
 	</div>
-	<br/><br/>
+	<br />
+	<br />
 	<div class="row">
 		<!-------------------------------- SEARCH FORM ------------------------------>
 		<div class="col-md-4 col-md-offset-4">
 			<div class="well text-center">
-				<h1>Extra Credit</h1>
+				<h1><i class="fa fa-credit-card-alt"></i>&nbsp;&nbsp;Extra Credit</h1>
 				<hr />
-				<p class="lead">Search for your favorite restaurants.</p>
+				<p class="lead">Search for 20 places near you.</p>
+
+				<button class="btn btn-info btn-block btn-md" id="get-location">
+					<i class="fa fa-location-arrow"></i>&nbsp;&nbsp;&nbsp;Get
+					your location
+				</button>
+				<br />
 				<form action="Search" method="post">
 					<div class="form-group">
 						<div class="input-group">
 							<div class="input-group-addon">Latitude</div>
 							<input id="lat" class="form-control" type="text" name="lat"
-								placeholder="Latitude" />
+								value="${latitude }" placeholder="Latitude" />
 						</div>
 					</div>
 					<div class="form-group">
 						<div class="input-group">
 							<div class="input-group-addon">Longitude</div>
 							<input id="lon" class="form-control" type="text" name="lon"
-								placeholder="Longitude" />
+								value="${longitude }" placeholder="Longitude" />
 						</div>
 					</div>
 					<div class="form-group">
 						<div class="input-group">
-							<div class="input-group-addon">Radius</div>
+							<div class="input-group-addon">Radius (miles)</div>
 							<input class="form-control" type="text" name="radius"
 								placeholder="Radius" />
 						</div>
@@ -153,37 +203,40 @@
 						value="Search" />
 				</form>
 				<br />
-				<button class="btn btn-info btn-block btn-md" id="get-location">
-					<i class="fa fa-caret-square-o-right"></i>&nbsp;&nbsp;&nbsp;Get
-					your location
-				</button>
 			</div>
 			<!-------------------------------- END  SEARCH FORM ------------------------------>
 		</div>
 	</div>
 
-	<!-------------------------------- RESULTS  ------------------------------>
-	<div class="row" id="results">
-		<!-------------------------------- RESULTS LIST ------------------------------>
-		<div class="col-md-2 col-md-offset-2">
-			<h4 class="page-header">
-				Restaurants within ${radius} meters
-				</h1>
+	<c:if test="${not empty places }">
+		<!-------------------------------- RESULTS  ------------------------------>
+		<div class="row" id="results">
+			<!-------------------------------- RESULTS LIST ------------------------------>
+			<div class="col-md-2 col-md-offset-2">
+				<h4 class="page-header">20 Places within ${radius} miles</h4>
 				<ul id="results-list" class="list-group">
 					<c:forEach items="${places}" var="place">
 						<li id="result-item" class="list-group-item">
 							<p class="text-info">Name: ${place.name}</p>
 							<p class="text-info">Longitude: ${place.lng}</p>
 							<p class="text-info">Latitude: ${place.lat}</p>
+							<p class="text-info">Address: ${place.address}</p>
+							<p class="text-info">Phone: ${place.phone}</p>
 						</li>
 						<script>
-							populate('${place.lat}', '${place.lng}');
+							populate('${place.lat}', '${place.lng}',
+									'${fn:length(places)}', [ '${place.name}',
+											'${place.address}',
+											'${place.phone}', '${place.types}',
+											'${place.lat}', '${place.lng}' ]);
 						</script>
 					</c:forEach>
 				</ul>
+			</div>
+			<!-------------------------------- END RESULTS LIST ------------------------------>
 		</div>
-		<!-------------------------------- END RESULTS LIST ------------------------------>
-	</div>
+	</c:if>
+
 
 	<!-------------------------------- RESULTS  ------------------------------>
 

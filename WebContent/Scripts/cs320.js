@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	
+
 	$("#get-location").on("click", function() {
 		getLocation();
 	});

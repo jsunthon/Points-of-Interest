@@ -15,9 +15,9 @@
 <link href="../Content/add_styling.css" rel="stylesheet" />
 <link href="../Content/footer-distributed-with-address-and-phones.css"
 	rel="stylesheet" />
-
 <!---------------------------------- END CSS -------------------------------------->
 
+<!---------------------------------- Google Maps Javascript -------------------------------------->
 <script type="text/javascript">
 	// In the following example, markers appear when the user clicks on the map.
 	// The markers are stored in an array.
@@ -53,7 +53,6 @@
 		});
 
 		if (placesLength === 0) {
-			/* var image = "http://goo.gl/7q702U"; */
 			var image = "../Content/person-icon.png";
 			var icon = {
 				url : image,
@@ -87,7 +86,7 @@
 		}
 	}
 
- 	function extendBounds() {
+	function extendBounds() {
 		var bounds = new google.maps.LatLngBounds();
 		for (var i = 0; i < markers.length; i++) {
 			var myLatLng = markers[i].getPosition();
@@ -145,6 +144,8 @@
 <script async defer
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDv_0sVA5OuZzQuulNUuP6gkYKMWt88vwk&callback=initialize"></script>
 
+<!---------------------------------- END Google Maps Javascript -------------------------------------->
+
 </head>
 <body class="container-fluid">
 
@@ -153,7 +154,7 @@
 	<div class="container-fluid">
 		<div class="navbar-header">
 			<a class="navbar-brand" href="#"><i class="fa fa-sitemap"></i>&nbsp;&nbsp;&nbsp;
-				Extra Credit Assignment</a>
+				CS320 Extra Credit Assignment</a>
 		</div>
 	</div>
 	</nav>
@@ -165,8 +166,9 @@
 
 	<br />
 	<br />
+
+	<!-------------------------------- SEARCH FORM ------------------------------>
 	<div class="row">
-		<!-------------------------------- SEARCH FORM ------------------------------>
 		<div class="col-md-4 col-md-offset-4">
 			<div class="well text-center">
 				<h1>
@@ -176,8 +178,7 @@
 				<p class="lead">Search for 20 places near you.</p>
 
 				<button class="btn btn-info btn-block btn-md" id="get-location">
-					<i class="fa fa-location-arrow"></i>&nbsp;&nbsp;&nbsp;Get your
-					location
+					<i class="fa fa-location-arrow"></i>&nbsp;&nbsp;&nbsp;Locate Me
 				</button>
 				<br />
 				<form action="Search" method="post">
@@ -205,43 +206,90 @@
 					<input type="submit" class="btn btn-info btn-block btn-md"
 						value="Search" />
 				</form>
-				<br />
 			</div>
-			<!-------------------------------- END  SEARCH FORM ------------------------------>
 		</div>
 	</div>
+	<!-------------------------------- END  SEARCH FORM ------------------------------>
+	<br />
 
+	<c:choose>
+		<c:when test="${not empty places}">
+			<!-------------------------------- RESULTS DIV ------------------------------>
+			<div id="results">
+				<!-------------------------------- GOOGLE MAP  ------------------------------>
+				<div class="row">
+					<div class="col-md-8 col-md-offset-2">
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								<h1 class="panel-title text-center">
+									<i class="fa fa-globe"></i> &nbsp;&nbsp;&nbsp;Google Map
+									Locations&nbsp;&nbsp;&nbsp;<i class="fa fa-map"></i>
+								</h1>
+							</div>
+							<div id="map" class="panel-body">Panel content</div>
+						</div>
+					</div>
+				</div>
+				<!-------------------------------- END GOOGLE MAP  ------------------------------>
+				<br />
 
-		<!-------------------------------- RESULTS  ------------------------------>
-		<div class="row" id="results">
-			<!-------------------------------- RESULTS LIST ------------------------------>
-			<div class="col-md-2 col-md-offset-2">
-				<h4 class="page-header">20 Places within ${radius} miles</h4>
-				<ul id="results-list" class="list-group">
-					<c:forEach items="${places}" var="place">
-						<li id="result-item" class="list-group-item">
-							<p class="text-info">Name: ${place.name}</p>
-							<p class="text-info">Longitude: ${place.lng}</p>
-							<p class="text-info">Latitude: ${place.lat}</p>
-							<p class="text-info">Address: ${place.address}</p>
-							<p class="text-info">Phone: ${place.phone}</p>
-						</li>
-						<script>
-							populate('${place.lat}', '${place.lng}',
-									'${fn:length(places)}', [ '${place.name}',
-											'${place.address}',
-											'${place.phone}', '${place.types}',
-											'${place.lat}', '${place.lng}' ]);
-						</script>
-					</c:forEach>
-				</ul>
+				<!-------------------------------- RESULTS LIST ------------------------------>
+				<div class="row">
+					<div class="col-md-8 col-md-offset-2">
+						<div class="panel panel-success">
+							<div class="panel-heading">
+								<h1 class="panel-title text-center">
+									<i class="fa fa-building"></i>&nbsp;&nbsp;20 Places within
+									${radius} miles
+								</h1>
+							</div>
+							<div class="panel-body well">
+								<ul id="results-list" class="list-group">
+									<c:forEach items="${places}" var="place">
+										<div class="col-md-6">
+											<li id="result-item" class="list-group-item">
+												<p class="text-primary">
+													<b>Name</b>: ${place.name}
+												</p>
+												<p class="text-primary">
+													<b>Longitude</b>: ${place.lng}
+												</p>
+												<p class="text-primary">
+													<b>Latitude</b>: ${place.lat}
+												</p>
+												<p class="text-primary">
+													<b>Address</b>: ${place.address}
+												</p>
+												<p class="text-primary">
+													<b>Phone</b>: ${place.phone}
+												</p>
+											</li>
+										</div>
+										<script>
+											populate('${place.lat}',
+													'${place.lng}',
+													'${fn:length(places)}', [
+															'${place.name}',
+															'${place.address}',
+															'${place.phone}',
+															'${place.types}',
+															'${place.lat}',
+															'${place.lng}' ]);
+										</script>
+									</c:forEach>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-------------------------------- END RESULTS LIST ------------------------------>
 			</div>
-			<div id="map" class="col-md-6"></div>
-			<!-------------------------------- END RESULTS LIST ------------------------------>
-		</div>
-
-
-	<!-------------------------------- RESULTS  ------------------------------>
+			<!-------------------------------- END RESULTS DIV ------------------------------>
+		</c:when>
+		<c:otherwise>
+			<div style="display: none;" id="map" class="col-md-6"></div>
+		</c:otherwise>
+	</c:choose>
 
 	<!-------------------------------- FOOTER  ------------------------------>
 	<div class="row">
@@ -252,7 +300,8 @@
 				<a href="#">Home</a> · <a href="#">About</a> · <a href="#">Faq</a> ·
 				<a href="#">Contact</a>
 			</p>
-			<p class="footer-company-name">James & Howie &copy; 2016</p>
+			<p class="footer-company-name">James Sunthonlap, Lihao Lin, Salem
+				Alharbi &copy; 2016</p>
 		</div>
 		<div class="footer-center">
 			<div>
@@ -269,14 +318,15 @@
 			<div>
 				<i class="fa fa-envelope"></i>
 				<p>
-					<a href="mailto:support@company.com">support@jamesandhowie.com</a>
+					<a href="mailto:support@company.com">support@jamesandhowieandsalem.com</a>
 				</p>
 			</div>
 		</div>
 		<div class="footer-right">
 			<p class="footer-company-about">
 				<span>About the company</span> We are a company that believes in
-				open source content.<br /> Everything ought to be free!
+				open source content.<br /> Everything ought to be free! Like this
+				map service.
 			</p>
 
 			<div class="footer-icons">
@@ -291,11 +341,8 @@
 
 	<!---------------------------------  JAVASCRIPT ------------------------------------>
 	<script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
-	<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 	<script src="../Scripts/bootstrap.min.js"></script>
 	<script src="../Scripts/cs320.js"></script>
-
-
 	<!--------------------------------- END JAVASCRIPT ------------------------------ -->
 
 </body>

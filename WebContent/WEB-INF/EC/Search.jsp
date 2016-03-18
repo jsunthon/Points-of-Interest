@@ -46,14 +46,17 @@
 		// Adds a marker at the center of the map.
 		addMarker(userLoc);
 	}
-
+	
 	// Adds a marker to the map and push to the array.
 	function addMarker(location) {
+/* 		var myLatLng = new google.maps.LatLng(location.lat, location.lng); */
 		var marker = new google.maps.Marker({
 			position : location,
 			map : map
 		});
+		/* bounds.extend(myLatLng); */
 		markers.push(marker);
+	/* 	map.fitBounds(bounds); */
 	}
 
 	// Sets the map on all markers in the array.
@@ -180,8 +183,6 @@
 				</ul>
 		</div>
 		<!-------------------------------- END RESULTS LIST ------------------------------>
-
-
 	</div>
 
 	<!-------------------------------- RESULTS  ------------------------------>

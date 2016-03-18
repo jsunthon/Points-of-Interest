@@ -22,9 +22,10 @@ public class Search extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-    	
+  	
         String latitude =  request.getParameter("lat"); // request.getParameter("latitude");
         String longitude = request.getParameter("lon"); // request.getParameter("longitude");
+
         String radius = request.getParameter("radius");
         
         request.setAttribute("latitude", latitude);
@@ -37,13 +38,12 @@ public class Search extends HttpServlet {
         if (latitude != null && longitude != null) {
             double lat = Double.parseDouble(latitude);
             double lng = Double.parseDouble(longitude);
-            int r = Integer.parseInt(radius); // TODO Check ratio of input radius to google radius param
+            double r = Integer.parseInt(radius) / 0.000621371192;  // Mile to meter
             
             String requestURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?" + 
         			"location=" + lat + ",%20" + lng + 
-        			"&radius=" + (r * 100) + 
+        			"&radius=" + r +
         			"&key=AIzaSyDv_0sVA5OuZzQuulNUuP6gkYKMWt88vwk";
-
             URL url = new URL(requestURL);
             Scanner scan = new Scanner(url.openStream());
             String jsonStr = new String();
@@ -62,7 +62,6 @@ public class Search extends HttpServlet {
                 JSONObject location = anchor.getJSONObject("geometry").getJSONObject("location");
                 pois.add(new POI(anchor.getString("name"), location.getDouble("lat"), location.getDouble("lng")));
             }
-
             request.setAttribute("places", pois);
 
         }
@@ -71,8 +70,8 @@ public class Search extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request,
-        HttpServletResponse response) throws ServletException, IOException {      
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+
         doGet(request, response);
     }
 }

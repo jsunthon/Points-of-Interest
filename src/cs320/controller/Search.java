@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import org.json.*;
+import org.omg.Messaging.SYNC_WITH_TRANSPORT;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -31,7 +33,7 @@ public class Search extends HttpServlet {
         request.setAttribute("longitude", longitude);
         request.setAttribute("radius", radius);
         
-        if (radius == null) {
+        if (radius != null && radius.equals("")) {
             radius = "20";
         }
         
@@ -40,28 +42,53 @@ public class Search extends HttpServlet {
             double lng = Double.parseDouble(longitude);
             double r = Integer.parseInt(radius) / 0.000621371192;  // Mile to meter
             
-            String requestURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?" + 
+            // request for list of places
+            String str = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?" + 
                     "location=" + lat + ",%20" + lng + 
                     "&radius=" + r +
                     "&key=AIzaSyDv_0sVA5OuZzQuulNUuP6gkYKMWt88vwk";
-            URL url = new URL(requestURL);
-            Scanner scan = new Scanner(url.openStream());
-            String jsonStr = new String();
+            URL requestURL = new URL(str);
+            Scanner scan = new Scanner(requestURL.openStream());
+            String places_info = new String();
+            
+            // scan returned json to string
             while (scan.hasNext())
-                jsonStr += scan.nextLine();
+                places_info += scan.nextLine();
             scan.close();
             
-            // build a JSON object
-            JSONObject obj = new JSONObject(jsonStr);
+            // using string create JSONObject
+            JSONObject obj = new JSONObject(places_info);
+            // get results(places)
             JSONArray anchors = obj.getJSONArray("results");
-            ArrayList<POI> pois = new ArrayList<>();
+            ArrayList<String> places_id = new ArrayList<>();
+            
+            // put place id in to a list
             for (int i = 0; i < anchors.length(); i++) {
                 JSONObject anchor = anchors.getJSONObject(i);
-                JSONObject location = anchor.getJSONObject("geometry").getJSONObject("location");
-                pois.add(new POI(anchor.getString("name"), String.valueOf(location.getDouble("lat")), String.valueOf(location.getDouble("lng"))));
+                places_id.add(anchor.getString("place_id"));
+            }
+            ArrayList<POI> pois = new ArrayList<>();
+            
+            // request for place detail using places id and put info into POI list
+            for(String id : places_id) {
+            	URL requestDetailURL = new URL("https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyDv_0sVA5OuZzQuulNUuP6gkYKMWt88vwk&placeid=" + id);
+            	scan = new Scanner(requestDetailURL.openStream());
+            	String placeDetial = new String();
+            	while (scan.hasNext())
+            		placeDetial += scan.nextLine();
+            	scan.close();
+            	JSONObject info = new JSONObject(placeDetial);
+            	info = info.getJSONObject("result");
+            	JSONObject location = info.getJSONObject("geometry").getJSONObject("location");
+            	String phone = (info.has("formatted_phone_number")) ? info.getString("formatted_phone_number") : "N/A";
+            	String types = info.get("types").toString();
+            	types = types.substring(1, types.length()-1);
+            	types = types.replaceAll("\"", "");
+                pois.add(new POI(info.getString("name"), 
+                		String.valueOf(location.getDouble("lat")), String.valueOf(location.getDouble("lng")), 
+                		info.getString("formatted_address"), phone,  types));
             }
             request.setAttribute("places", pois);
-
         }
 
         request.getRequestDispatcher("/WEB-INF/EC/Search.jsp").forward(request, response);

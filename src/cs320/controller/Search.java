@@ -22,10 +22,14 @@ public class Search extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-
-        String latitude =  "34.067701"; // request.getParameter("latitude");
-        String longitude = "-118.124040"; // request.getParameter("longitude");
+    	
+        String latitude =  request.getParameter("lat"); // request.getParameter("latitude");
+        String longitude = request.getParameter("lon"); // request.getParameter("longitude");
         String radius = request.getParameter("radius");
+        
+        request.setAttribute("latitude", latitude);
+        request.setAttribute("longitude", longitude);
+        request.setAttribute("radius", radius);
         if (radius == null) {
 			radius = "20";
 		}
@@ -59,7 +63,7 @@ public class Search extends HttpServlet {
                 pois.add(new POI(anchor.getString("name"), location.getDouble("lat"), location.getDouble("lng")));
             }
 
-            request.setAttribute("results", pois);
+            request.setAttribute("places", pois);
 
         }
 
@@ -68,13 +72,7 @@ public class Search extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request,
-        HttpServletResponse response) throws ServletException, IOException {
-
-        double latitude = Double.valueOf(request.getParameter("lat"));
-        double longitude = Double.valueOf(request.getParameter("lon"));
-        double radius = Double.valueOf(request.getParameter("radius"));
-
+        HttpServletResponse response) throws ServletException, IOException {      
         doGet(request, response);
-
     }
 }

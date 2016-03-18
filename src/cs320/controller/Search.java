@@ -27,8 +27,13 @@ public class Search extends HttpServlet {
         String longitude = request.getParameter("lon"); // request.getParameter("longitude");
         String radius = request.getParameter("radius");
         
-        request.setAttribute("latitude", latitude);
-        request.setAttribute("longitude", longitude);
+        if (latitude == null && longitude == null) {
+        	 request.setAttribute("latitude", "34.067701");
+        	 request.setAttribute("longitude", "-118.12404");
+        } else {
+        	 request.setAttribute("latitude", latitude);
+             request.setAttribute("longitude", longitude);
+        }
         request.setAttribute("radius", radius);
         
         if (radius != null && radius.equals("")) {

@@ -45,7 +45,7 @@
 
 	// Adds a marker to the map and push to the array.
 	function addMarker(location, placesLength, content) {
-
+		console.log("Add MArker CAlled");
 		var contentString = content;
 
 		var infowindow = new google.maps.InfoWindow({
@@ -83,10 +83,11 @@
 
 		if (markers.length >= placesLength) {
 			extendBounds();
+			setMapOnAll(map);
 		}
 	}
 
-	function extendBounds() {
+ 	function extendBounds() {
 		var bounds = new google.maps.LatLngBounds();
 		for (var i = 0; i < markers.length; i++) {
 			var myLatLng = markers[i].getPosition();
@@ -136,9 +137,13 @@
 		addMarker(location, placesLength, content);
 		console.log("\nlatitude: " + lati + " longitude: " + longi);
 	}
+
+	function initialize() {
+		google.maps.event.addDomListener(window, "load", initMap);
+	}
 </script>
 <script async defer
-	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDv_0sVA5OuZzQuulNUuP6gkYKMWt88vwk&callback=initMap"></script>
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDv_0sVA5OuZzQuulNUuP6gkYKMWt88vwk&callback=initialize"></script>
 
 </head>
 <body class="container-fluid">
@@ -157,24 +162,22 @@
 	<br />
 	<br />
 	<br />
-	<div class="row">
-		<!-------------------------------- GOOGLE MAP ------------------------------>
-		<div id="map" class="col-md-6 col-md-offset-2"></div>
-		<!-------------------------------- END GOOGLE MAP ------------------------------>
-	</div>
+
 	<br />
 	<br />
 	<div class="row">
 		<!-------------------------------- SEARCH FORM ------------------------------>
 		<div class="col-md-4 col-md-offset-4">
 			<div class="well text-center">
-				<h1><i class="fa fa-credit-card-alt"></i>&nbsp;&nbsp;Extra Credit</h1>
+				<h1>
+					<i class="fa fa-credit-card-alt"></i>&nbsp;&nbsp;Extra Credit
+				</h1>
 				<hr />
 				<p class="lead">Search for 20 places near you.</p>
 
 				<button class="btn btn-info btn-block btn-md" id="get-location">
-					<i class="fa fa-location-arrow"></i>&nbsp;&nbsp;&nbsp;Get
-					your location
+					<i class="fa fa-location-arrow"></i>&nbsp;&nbsp;&nbsp;Get your
+					location
 				</button>
 				<br />
 				<form action="Search" method="post">
@@ -208,7 +211,7 @@
 		</div>
 	</div>
 
-	<c:if test="${not empty places }">
+
 		<!-------------------------------- RESULTS  ------------------------------>
 		<div class="row" id="results">
 			<!-------------------------------- RESULTS LIST ------------------------------>
@@ -233,9 +236,9 @@
 					</c:forEach>
 				</ul>
 			</div>
+			<div id="map" class="col-md-6"></div>
 			<!-------------------------------- END RESULTS LIST ------------------------------>
 		</div>
-	</c:if>
 
 
 	<!-------------------------------- RESULTS  ------------------------------>

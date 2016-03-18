@@ -23,8 +23,8 @@ public class Search extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
 
-        String latitude =  "34.067701"; // request.getParameter("latitude");
-        String longitude = "-118.124040"; // request.getParameter("longitude");
+        String latitude = request.getParameter("lat");
+        String longitude = request.getParameter("lon");
         String radius = request.getParameter("radius");
         if (radius == null) {
 			radius = "20";
@@ -33,13 +33,12 @@ public class Search extends HttpServlet {
         if (latitude != null && longitude != null) {
             double lat = Double.parseDouble(latitude);
             double lng = Double.parseDouble(longitude);
-            int r = Integer.parseInt(radius); // TODO Check ratio of input radius to google radius param
+            double r = Integer.parseInt(radius) / 0.000621371192;  // Mile to meter
             
             String requestURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?" + 
         			"location=" + lat + ",%20" + lng + 
-        			"&radius=" + (r * 100) + 
+        			"&radius=" + r +
         			"&key=AIzaSyDv_0sVA5OuZzQuulNUuP6gkYKMWt88vwk";
-
             URL url = new URL(requestURL);
             Scanner scan = new Scanner(url.openStream());
             String jsonStr = new String();
@@ -58,9 +57,7 @@ public class Search extends HttpServlet {
                 JSONObject location = anchor.getJSONObject("geometry").getJSONObject("location");
                 pois.add(new POI(anchor.getString("name"), location.getDouble("lat"), location.getDouble("lng")));
             }
-
-            request.setAttribute("results", pois);
-
+            request.setAttribute("places", pois);
         }
 
         request.getRequestDispatcher("/WEB-INF/EC/Search.jsp").forward(request, response);
@@ -69,11 +66,6 @@ public class Search extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request,
         HttpServletResponse response) throws ServletException, IOException {
-
-        double latitude = Double.valueOf(request.getParameter("lat"));
-        double longitude = Double.valueOf(request.getParameter("lon"));
-        double radius = Double.valueOf(request.getParameter("radius"));
-
         doGet(request, response);
 
     }

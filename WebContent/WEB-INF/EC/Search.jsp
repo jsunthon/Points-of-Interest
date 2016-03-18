@@ -47,21 +47,21 @@
 					<div class="form-group">
 						<div class="input-group">
 							<div class="input-group-addon">Latitude</div>
-							<input id="lat" class="form-control" value="${ param.lat }" type="text" name="lat"
+							<input id="lat" class="form-control" type="text" name="lat"
 								placeholder="Latitude" />
 						</div>
 					</div>
 					<div class="form-group">
 						<div class="input-group">
 							<div class="input-group-addon">Longitude</div>
-							<input id="lon" class="form-control" value="${ param.lon }" type="text" name="lon"
+							<input id="lon" class="form-control" type="text" name="lon"
 								placeholder="Longitude" />
 						</div>
 					</div>
 					<div class="form-group">
 						<div class="input-group">
 							<div class="input-group-addon">Radius</div>
-							<input class="form-control" value="${ param.radius }" type="text" name="radius"
+							<input class="form-control" type="text" name="radius"
 								placeholder="Radius" />
 						</div>
 					</div>
@@ -89,8 +89,8 @@
 					<c:forEach items="${places}" var="place">
 						<li id="result-item" class="list-group-item">
 							<p class="text-info">Name: ${place.name}</p>
-							<p class="text-info">Longitude: ${place.lat}</p>
-							<p class="text-info">Latitude: ${place.lng}</p>
+							<p class="text-info">Longitude: ${place.lng}</p>
+							<p class="text-info">Latitude: ${place.lat}</p>
 						</li>
 					</c:forEach>
 				</ul>
@@ -180,13 +180,12 @@
 				zoom : 12,
 				center : userLoc,
 			});
-/* 
+
 			// This event listener will call addMarker() when the map is clicked.
 			map.addListener('click', function(event) {
 				addMarker(event.latLng);
-			}); */
-			var places = '${places}';
-			console.log(typeof places);
+			});
+
 			// Adds a marker at the center of the map.
 			addMarker(userLoc);
 		}

@@ -25,12 +25,12 @@ public class Search extends HttpServlet {
   	
         String latitude =  request.getParameter("lat"); // request.getParameter("latitude");
         String longitude = request.getParameter("lon"); // request.getParameter("longitude");
-
         String radius = request.getParameter("radius");
         
         request.setAttribute("latitude", latitude);
         request.setAttribute("longitude", longitude);
         request.setAttribute("radius", radius);
+        
         if (radius == null) {
 			radius = "20";
 		}

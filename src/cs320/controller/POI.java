@@ -7,7 +7,7 @@ public class POI {
 	private String address;
 	private String phone;
 	private String types;
-	
+
 	public POI(String name, String lat, String lng, String address, String phone, String types) {
 		super();
 		this.name = name;
@@ -49,11 +49,33 @@ public class POI {
 		this.lng = lng;
 	}
 
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getTypes() {
+		return types;
+	}
+
+	public void setTypes(String types) {
+		this.types = types;
+	}
+
 	@Override
 	public String toString() {
-		return name + ":(" + lat + ", " + lng + ") " + address + "  " + phone + "  " + types; 
+		return name + ":(" + lat + ", " + lng + ") " + address + "  " + phone + "  " + types;
 	}
-	
-	
-	
+
 }

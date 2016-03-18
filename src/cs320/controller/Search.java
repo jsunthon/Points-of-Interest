@@ -60,7 +60,7 @@ public class Search extends HttpServlet {
             for (int i = 0; i < anchors.length(); i++) {
                 JSONObject anchor = anchors.getJSONObject(i);
                 JSONObject location = anchor.getJSONObject("geometry").getJSONObject("location");
-                pois.add(new POI(anchor.getString("name"), location.getDouble("lat"), location.getDouble("lng")));
+                pois.add(new POI(anchor.getString("name"), String.valueOf(location.getDouble("lat")), String.valueOf(location.getDouble("lng"))));
             }
             request.setAttribute("places", pois);
 

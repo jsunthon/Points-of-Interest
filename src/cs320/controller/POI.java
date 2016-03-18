@@ -2,10 +2,10 @@ package cs320.controller;
 
 public class POI {
 	private String name;
-	private double lat;
-	private double lng;
+	private String lat;
+	private String lng;
 	
-	public POI(String name, double lat, double lng) {
+	public POI(String name, String lat, String lng) {
 		super();
 		this.name = name;
 		this.lat = lat;
@@ -16,23 +16,23 @@ public class POI {
 		return name;
 	}
 
-	public double getLat() {
-		return lat;
-	}
-
-	public double getLng() {
-		return lng;
-	}
-
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	public void setLat(double lat) {
+	public String getLat() {
+		return lat;
+	}
+
+	public void setLat(String lat) {
 		this.lat = lat;
 	}
 
-	public void setLng(double lng) {
+	public String getLng() {
+		return lng;
+	}
+
+	public void setLng(String lng) {
 		this.lng = lng;
 	}
 

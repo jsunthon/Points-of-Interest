@@ -293,7 +293,7 @@
 								<ul id="results-list" class="list-group">
 									<c:forEach items="${places}" var="place">
 										<div class="col-md-6">
-											<li id="result-item" class="list-group-item">
+											<li class="result-item list-group-item">
 												<p class="text-primary">
 													<b>Name</b>: ${place.name}
 												</p>

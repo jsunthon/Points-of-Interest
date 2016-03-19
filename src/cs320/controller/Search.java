@@ -26,6 +26,7 @@ public class Search extends HttpServlet {
         String latitude =  request.getParameter("lat"); // request.getParameter("latitude");
         String longitude = request.getParameter("lon"); // request.getParameter("longitude");
         String radius = request.getParameter("radius");
+        String type = request.getParameter("type");
         
         if (latitude == null && longitude == null) {
         	 request.setAttribute("latitude", "34.067701");
@@ -44,11 +45,12 @@ public class Search extends HttpServlet {
             double lat = Double.parseDouble(latitude);
             double lng = Double.parseDouble(longitude);
             double r = Integer.parseInt(radius) / 0.000621371192;  // Mile to meter
-            
+            System.out.println("Miles: " + r);
             // request for list of places
             String str = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?" + 
                     "location=" + lat + ",%20" + lng + 
                     "&radius=" + r +
+                    "&type=" + type +
                     "&key=AIzaSyDv_0sVA5OuZzQuulNUuP6gkYKMWt88vwk";
             URL requestURL = new URL(str);
             Scanner scan = new Scanner(requestURL.openStream());
@@ -89,8 +91,9 @@ public class Search extends HttpServlet {
             	types = types.replaceAll("\"", "");
                 pois.add(new POI(info.getString("name"), 
                 		String.valueOf(location.getDouble("lat")), String.valueOf(location.getDouble("lng")), 
-                		info.getString("formatted_address"), phone,  types));
+                		info.getString("formatted_address"), info.getString("url"), phone,  types));
             }
+            request.setAttribute("resultsLength", pois.size());
             request.setAttribute("places", pois);
         }
 

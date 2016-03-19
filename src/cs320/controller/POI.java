@@ -7,13 +7,15 @@ public class POI {
 	private String address;
 	private String phone;
 	private String types;
+	private String url;
 
-	public POI(String name, String lat, String lng, String address, String phone, String types) {
+	public POI(String name, String lat, String lng, String address, String url, String phone, String types) {
 		super();
 		this.name = name;
 		this.lat = lat;
 		this.lng = lng;
 		this.address = address;
+		this.url = url;
 		this.phone = phone;
 		this.types = types;
 	}
@@ -55,6 +57,14 @@ public class POI {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	public String getPhone() {

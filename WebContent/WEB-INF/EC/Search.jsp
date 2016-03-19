@@ -163,10 +163,22 @@
 	<br />
 	<br />
 	<br />
-
 	<br />
 	<br />
-
+	<div class="row">
+		<div class="col-md-6 col-md-offset-3">
+			<div class="animated slideInLeft alert alert-dismissible alert-warning">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				<h4><b><i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;ATTENTION!</b></h4>
+				<ol>
+					<li>For the "Locate Me" button to function correctly, you MUST use a browser that supports geolocation (Chrome, ect.)</li><br/>
+					<li>When clicking "Locate Me", it may take up to several seconds to auto populate the latitude and longitude text fields, depending on your browser and local machine performance.</li><br/>
+					<li>Longitude and latitude values must be in decimal degrees. For example, latitude = 38.8897, longitude -77.0089 is a valid location.</li><br/>
+					<li>GitHub repo: <a href="https://github.com/jsunthon/cs320_ec">https://github.com/jsunthon/cs320_ec</a></li>
+				</ol>
+			</div>
+		</div>
+	</div>
 	<!-------------------------------- SEARCH FORM ------------------------------>
 	<div class="row">
 		<div class="col-md-4 col-md-offset-4">
@@ -175,13 +187,47 @@
 					<i class="fa fa-credit-card-alt"></i>&nbsp;&nbsp;Extra Credit
 				</h1>
 				<hr />
-				<p class="lead">Search for 20 places near you.</p>
+				<p class="lead">Search for up 20 places near you (within up to
+					31 miles).</p>
 
 				<button class="btn btn-info btn-block btn-md" id="get-location">
 					<i class="fa fa-location-arrow"></i>&nbsp;&nbsp;&nbsp;Locate Me
 				</button>
 				<br />
 				<form action="Search" method="post">
+					<div class="form-group">
+						<div class="input-group">
+							<div class="input-group-addon">Search Type</div>
+							<select class="form-control" name="type">
+								<option value="restaurant"
+									${param.type == "restaurant" ? 'selected="selected"' : ''}>Restaurants</option>
+								<option value="cafe"
+									${param.type == "cafe" ? 'selected="selected"' : ''}>Cafe</option>
+								<option value="university"
+									${param.type == "university" ? 'selected="selected"' : ''}>Universities</option>
+								<option value="school"
+									${param.type == "school" ? 'selected="selected"' : ''}>Schools</option>
+								<option value="gym"
+									${param.type == "gym" ? 'selected="selected"' : ''}>Gym</option>
+								<option value="park"
+									${param.type == "park" ? 'selected="selected"' : ''}>Parks</option>
+								<option value="police"
+									${param.type == "policy" ? 'selected="selected"' : ''}>Police</option>
+								<option value="shopping_mall"
+									${param.type == "shopping_mall" ? 'selected="selected"' : ''}>Shopping
+									Malls</option>
+								<option value="doctor"
+									${param.type == "doctor" ? 'selected="selected"' : ''}>Doctors</option>
+								<option value="dentist"
+									${param.type == "dentist" ? 'selected="selected"' : ''}>Dentists</option>
+								<option value="post_office"
+									${param.type == "post_office" ? 'selected="selected"' : ''}>Post
+									Office</option>
+								<option value="church"
+									${param.type == "church" ? 'selected="selected"' : ''}>Churches</option>
+							</select>
+						</div>
+					</div>
 					<div class="form-group">
 						<div class="input-group">
 							<div class="input-group-addon">Latitude</div>
@@ -239,8 +285,8 @@
 						<div class="panel panel-success">
 							<div class="panel-heading">
 								<h1 class="panel-title text-center">
-									<i class="fa fa-building"></i>&nbsp;&nbsp;20 Places within
-									${radius} miles
+									<i class="fa fa-building"></i>&nbsp;&nbsp;${resultsLength }
+									${param.type } within ${radius} miles
 								</h1>
 							</div>
 							<div class="panel-body well">
@@ -252,16 +298,19 @@
 													<b>Name</b>: ${place.name}
 												</p>
 												<p class="text-primary">
+													<b>Address</b>: ${place.address}
+												</p>
+												<p class="text-primary">
+													<b>Phone</b>: ${place.phone}
+												</p>
+												<p class="text-primary">
 													<b>Longitude</b>: ${place.lng}
 												</p>
 												<p class="text-primary">
 													<b>Latitude</b>: ${place.lat}
 												</p>
 												<p class="text-primary">
-													<b>Address</b>: ${place.address}
-												</p>
-												<p class="text-primary">
-													<b>Phone</b>: ${place.phone}
+													<b>Google URL</b>: <a href="${place.url}">${place.url }</a>
 												</p>
 											</li>
 										</div>

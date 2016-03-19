@@ -171,10 +171,11 @@
 				<button type="button" class="close" data-dismiss="alert">&times;</button>
 				<h4><b><i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;ATTENTION!</b></h4>
 				<ol>
+					<li><b>GROUP MEMBERS</b>: James Sunthonlap, Lihao Lin, Salem Alharbi</li><br/>
 					<li>For the "Locate Me" button to function correctly, you MUST use a browser that supports geolocation (Chrome, ect.)</li><br/>
 					<li>When clicking "Locate Me", it may take up to several seconds to auto populate the latitude and longitude text fields, depending on your browser and local machine performance.</li><br/>
 					<li>Longitude and latitude values must be in decimal degrees. For example, latitude = 38.8897, longitude -77.0089 is a valid location.</li><br/>
-					<li>GitHub repo: <a href="https://github.com/jsunthon/cs320_ec">https://github.com/jsunthon/cs320_ec</a></li>
+					<li>Project GitHub link: <a href="https://github.com/jsunthon/cs320_ec">https://github.com/jsunthon/cs320_ec</a></li>
 				</ol>
 			</div>
 		</div>

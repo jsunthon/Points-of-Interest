@@ -141,7 +141,7 @@
 		google.maps.event.addDomListener(window, "load", initMap);
 	}
 </script>
-<script async defer
+<script
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDv_0sVA5OuZzQuulNUuP6gkYKMWt88vwk&callback=initialize"></script>
 
 <!---------------------------------- END Google Maps Javascript -------------------------------------->
